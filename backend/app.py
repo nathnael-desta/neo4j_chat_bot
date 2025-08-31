@@ -5,6 +5,7 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_neo4j import GraphCypherQAChain, Neo4jGraph
+from langchain_core.prompts import PromptTemplate # Add this import at the top
 
 # Load environment variables from .env file
 load_dotenv()
@@ -67,32 +68,47 @@ def generate_query():
         return jsonify({"error": "Question not provided"}), 400
 
     try:
-        # invoke with the key the chain expects
+        # STEP 1: RETRIEVE DATA
         result = chain.invoke({"query": question})
 
-        # be defensive when extracting the generated cypher across LC versions
-        steps = result.get("intermediate_steps", []) or []
-        generated_query = ""
+        # Extract the query and the raw data from the result
+        intermediate_steps = result.get("intermediate_steps", [])
+        generated_query = intermediate_steps[0].get("query", "")
+        context = intermediate_steps[1].get("context", [])
 
-        for s in steps:
-            # different versions/impls use different keys
-            if isinstance(s, dict):
-                for k in ("query", "cypher", "generated_cypher"):
-                    if k in s and isinstance(s[k], str) and s[k].strip():
-                        generated_query = s[k].strip()
-                        break
-            if generated_query:
-                break
+        # STEP 2: GENERATE NATURAL LANGUAGE ANSWER
+        if context:
+            prompt_template = PromptTemplate.from_template(
+                """Based on the user's question and the following retrieved data,
+                provide a conversational, natural language answer.
 
+                Original Question: {question}
+
+                Retrieved Data:
+                {context}
+
+                Final Answer:"""
+            )
+            answer_chain = prompt_template | llm
+            final_answer = answer_chain.invoke({
+                "question": question,
+                "context": context
+            })
+            if hasattr(final_answer, 'content'):
+              final_answer = final_answer.content
+        else:
+            final_answer = "I was unable to find an answer to your question in the database."
+
+        # Package everything into the final response
         return jsonify({
-            "cypher_query": generated_query,
-            "intermediate_steps": steps  # keep for debugging; remove in prod
+            "answer": final_answer,
+            "generated_query": generated_query,
+            "retrieved_data": context
         })
-
 
     except Exception as e:
         print(f"Error during chain invocation: {e}")
-        return jsonify({"error": "Failed to generate query. See server logs for details."}), 500
+        return jsonify({"error": "Failed to generate answer. See server logs."}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
