@@ -44,12 +44,13 @@ def calculator(expression: str) -> str:
     except Exception as e:
         return f"Error evaluating expression: {e}"
 
-# The tool is now ONLY the data retrieval chain.
+# The GraphCypherQAChain is now configured to return its own intermediate steps.
 graph_qa_chain = GraphCypherQAChain.from_llm(
     llm=llm,
     graph=graph,
     verbose=True,
-    allow_dangerous_requests=True
+    allow_dangerous_requests=True,
+    return_intermediate_steps=True # Ensure the tool itself returns the Cypher query
 )
 
 tool_description = (
@@ -121,11 +122,36 @@ def generate_query():
     if not question:
         return jsonify({"error": "Question not provided"}), 400
     try:
+        # Get the full response from the agent
         response = agent_executor.invoke({"input": question})
-        return jsonify({"answer": response.get("output")})
+
+        # --- NEW: Manually format the intermediate steps ---
+        serializable_steps = []
+        if "intermediate_steps" in response:
+            for action, observation in response["intermediate_steps"]:
+                serializable_steps.append(
+                    {
+                        "action": {
+                            "tool": action.tool,
+                            "tool_input": action.tool_input,
+                            "log": action.log.strip(), # The agent's "thought"
+                        },
+                        "observation": observation,
+                    }
+                )
+
+        # Create the final, serializable response object
+        final_response = {
+            "input": response.get("input"),
+            "output": response.get("output"),
+            "intermediate_steps": serializable_steps,
+        }
+        
+        return jsonify(final_response)
+
     except Exception as e:
         print(f"Error during agent executor invocation: {e}")
         return jsonify({"error": "Failed to process request. See server logs."}), 500
-
+    
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

@@ -47,7 +47,8 @@ async function handleSubmit(text?: string) {
     );
 
     // Extract the final answer from the backend's JSON response
-    const botAnswer = response.data.answer;
+    const botAnswer = response.data.output;
+    console.log({response})
 
     // Add the complete bot response to the UI
     const newMessage = { content: botAnswer, role: "assistant", id: traceId };
