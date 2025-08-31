@@ -67,13 +67,28 @@ def generate_query():
         return jsonify({"error": "Question not provided"}), 400
 
     try:
-        # Invoke the chain with the user's question
+        # invoke with the key the chain expects
         result = chain.invoke({"query": question})
 
-        # The generated Cypher query is in the intermediate_steps
-        generated_query = result['intermediate_steps'][0]['query']
+        # be defensive when extracting the generated cypher across LC versions
+        steps = result.get("intermediate_steps", []) or []
+        generated_query = ""
 
-        return jsonify({"cypher_query": generated_query})
+        for s in steps:
+            # different versions/impls use different keys
+            if isinstance(s, dict):
+                for k in ("query", "cypher", "generated_cypher"):
+                    if k in s and isinstance(s[k], str) and s[k].strip():
+                        generated_query = s[k].strip()
+                        break
+            if generated_query:
+                break
+
+        return jsonify({
+            "cypher_query": generated_query,
+            "intermediate_steps": steps  # keep for debugging; remove in prod
+        })
+
 
     except Exception as e:
         print(f"Error during chain invocation: {e}")
