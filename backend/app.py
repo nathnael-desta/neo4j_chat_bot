@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 # --- LangChain Imports ---
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_neo4j import GraphCypherQAChain, Neo4jGraph
-from langchain.tools import Tool
+from langchain.tools import Tool, tool
 from langchain.agents import AgentExecutor, create_react_agent
 from langchain_core.prompts import PromptTemplate
 
@@ -34,6 +34,16 @@ except Exception as e:
 
 # --- 2. LangChain Agentic Workflow Definition ---
 
+# --- Add this new tool definition ---
+@tool
+def calculator(expression: str) -> str:
+    """A simple calculator. Use this to evaluate mathematical expressions."""
+    try:
+        # Using eval() is simple for this example.
+        return str(eval(expression))
+    except Exception as e:
+        return f"Error evaluating expression: {e}"
+
 # The tool is now ONLY the data retrieval chain.
 graph_qa_chain = GraphCypherQAChain.from_llm(
     llm=llm,
@@ -55,7 +65,8 @@ tools = [
         name="graph_database_query_tool",
         func=graph_qa_chain.invoke,
         description=tool_description,
-    )
+    ),
+    calculator # <-- Add the new tool here
 ]
 
 # CORRECTED PROMPT using a single string template
@@ -97,7 +108,8 @@ agent_executor = AgentExecutor(
     agent=agent,
     tools=tools,
     verbose=True,
-    handle_parsing_errors=True
+    handle_parsing_errors=True,
+    return_intermediate_steps=True
 )
 
 # --- 3. Flask API Endpoint ---
