@@ -43,10 +43,11 @@ graph_qa_chain = GraphCypherQAChain.from_llm(
 )
 
 tool_description = (
-    "This tool is an expert at querying a Neo4j graph database containing information about basketball players, coaches, and teams. "
-    "Use it to answer specific, factual questions about PLAYER, COACH, and TEAM nodes and their relationships like TEAMMATES, COACHES, and PLAYS_FOR. "
-    "The input to this tool should be a single, clear question that can likely be answered with a single database query. "
-    "For example: 'Who is the coach for the LA Lakers?' or 'How many points did LeBron James score against the Memphis Grizzlies?'"
+    "This tool queries a basketball graph database for factual information. "
+    "Use it for specific questions about players, teams, and coaches. "
+    "The database schema includes PLAYER nodes with properties like 'name', 'age', 'number', 'height', and 'weight'. "
+    "The input should be a single, clear question. "
+    "For example: 'How old is LeBron James?' or 'Who are the teammates of Luka Doncic?'"
 )
 
 tools = [
