@@ -79,15 +79,17 @@ def generate_query():
         # STEP 2: GENERATE NATURAL LANGUAGE ANSWER
         if context:
             prompt_template = PromptTemplate.from_template(
-                """Based on the user's question and the following retrieved data,
-                provide a conversational, natural language answer.
+            """You are an AI assistant that converts structured JSON data into a natural language answer.
+            You will be given a user's question and a JSON object containing the data retrieved from a knowledge graph to answer that question.
+            Your task is to analyze the JSON data and formulate a concise, conversational answer that directly addresses the original question.
+            Base your answer ONLY on the provided data. Do not make up information.
 
-                Original Question: {question}
+            Original Question: {question}
 
-                Retrieved Data:
-                {context}
+            Retrieved Data (JSON):
+            {context}
 
-                Final Answer:"""
+            Natural Language Answer:"""
             )
             answer_chain = prompt_template | llm
             final_answer = answer_chain.invoke({
@@ -99,12 +101,16 @@ def generate_query():
         else:
             final_answer = "I was unable to find an answer to your question in the database."
 
-        # Package everything into the final response
-        return jsonify({
+        returned_answer = jsonify({
             "answer": final_answer,
             "generated_query": generated_query,
             "retrieved_data": context
         })
+        
+        print(returned_answer)
+
+        # Package everything into the final response
+        return returned_answer
 
     except Exception as e:
         print(f"Error during chain invocation: {e}")
