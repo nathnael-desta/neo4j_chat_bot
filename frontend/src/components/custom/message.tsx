@@ -38,7 +38,7 @@ export function PreviewMessage({ message }: { message: message }) {
       </div>
       {showSteps && message.intermediate_steps && (
         <div className="p-4 pt-0 md:max-w-3xl md:w-full md:pl-[64px]">
-            <IntermediateSteps steps={message.intermediate_steps} />
+            <IntermediateSteps steps={message.intermediate_steps} finalAnswer={message.content} />
         </div>
       )}
     </div>

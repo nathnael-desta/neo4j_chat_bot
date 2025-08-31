@@ -10,7 +10,12 @@ interface Step {
     observation: any;
 }
 
-export function IntermediateSteps({ steps }: { steps: Step[] }) {
+interface IntermediateStepsProps {
+    steps: Step[];
+    finalAnswer: string;
+}
+
+export function IntermediateSteps({ steps, finalAnswer }: IntermediateStepsProps) {
     if (!steps || steps.length === 0) {
         return null;
     }
@@ -72,6 +77,21 @@ export function IntermediateSteps({ steps }: { steps: Step[] }) {
                     </CardContent>
                 </Card>
             ))}
+            {steps.length > 1 && (
+                 <Card key={steps.length} className="bg-background/50">
+                    <CardHeader className="p-4">
+                        <CardTitle className="text-base">Step {steps.length + 1}: Formulating Response from Agentic Trace</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4 p-4 pt-0">
+                        <div>
+                            <p className="font-semibold text-sm">Observation:</p>
+                            <div className="p-2 bg-secondary rounded-md mt-1">
+                                <p className="text-sm text-muted-foreground">{finalAnswer}</p>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
         </div>
     );
 }
