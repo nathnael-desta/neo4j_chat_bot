@@ -92,7 +92,7 @@ export function Chat() {
                 <span role="img" aria-label="basketball">🏀</span>
               </h1>
               <p className=" mb-4">
-                This chat is powered by a database featuring NBA stars like <strong>LeBron James</strong>, <strong>Kevin Durant</strong>, <strong>Luka Doncic</strong>, and <strong>Giannis Antetokounmpo</strong>, and teams like the <strong>LA Lakers</strong>, <strong>Brooklyn Nets</strong>, and <strong>Dallas Mavericks</strong>.
+                This chat is powered by a Neo4j database featuring NBA stars like <strong>LeBron James</strong>, <strong>Kevin Durant</strong>, <strong>Luka Doncic</strong>, and <strong>Giannis Antetokounmpo</strong>, and teams like the <strong>LA Lakers</strong>, <strong>Brooklyn Nets</strong>, and <strong>Dallas Mavericks</strong>.
               </p>
               <p>
                 You can ask about player stats, team rosters, coaching staff, and game performances.

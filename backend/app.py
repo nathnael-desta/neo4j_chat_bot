@@ -1,10 +1,9 @@
 # app.py (Corrected Agentic Workflow)
+# app.py
 import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
-
-# --- LangChain Imports ---
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_neo4j import GraphCypherQAChain, Neo4jGraph
 from langchain.tools import Tool, tool
@@ -14,13 +13,13 @@ from langchain_core.prompts import PromptTemplate
 # Load environment variables from .env file
 load_dotenv()
 
-# --- 1. Global Components Setup ---
-
+# Initialize Flask app
 app = Flask(__name__)
 CORS(app)
 
 llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash-lite", temperature=0)
 
+# Initialize the Neo4j graph
 try:
     graph = Neo4jGraph(
         url=os.getenv("NEO4J_URI"),
@@ -32,9 +31,7 @@ except Exception as e:
     print(f"Error connecting to Neo4j: {e}")
     graph = None
 
-# --- 2. LangChain Agentic Workflow Definition ---
-
-# --- Add this new tool definition ---
+ # Agent and Tools Setup
 @tool
 def calculator(expression: str) -> str:
     """A simple calculator. Use this to evaluate mathematical expressions."""
@@ -44,7 +41,7 @@ def calculator(expression: str) -> str:
     except Exception as e:
         return f"Error evaluating expression: {e}"
 
-# The GraphCypherQAChain is now configured to return its own intermediate steps.
+# Initialize the GraphCypherQAChain
 graph_qa_chain = GraphCypherQAChain.from_llm(
     llm=llm,
     graph=graph,
@@ -53,6 +50,7 @@ graph_qa_chain = GraphCypherQAChain.from_llm(
     return_intermediate_steps=True # Ensure the tool itself returns the Cypher query
 )
 
+# Initialize the tool description
 tool_description = (
     "This tool queries a basketball graph database for factual information. "
     "Use it for specific questions about players, teams, and coaches. "
@@ -61,6 +59,7 @@ tool_description = (
     "For example: 'How old is LeBron James?' or 'Who are the teammates of Luka Doncic?'"
 )
 
+# Initialize the tools list
 tools = [
     Tool(
         name="graph_database_query_tool",
@@ -70,7 +69,7 @@ tools = [
     calculator # <-- Add the new tool here
 ]
 
-# CORRECTED PROMPT using a single string template
+# Initialize the agent prompt template
 AGENT_PROMPT_TEMPLATE = """
 You are an expert sports analyst and a master planner. Your primary goal is to answer a user's complex question by breaking it down into a series of smaller, factual sub-questions.
 
@@ -100,11 +99,14 @@ Question: {input}
 Thought:{agent_scratchpad}
 """
 
-# CORRECTED PROMPT CREATION using the standard PromptTemplate
+# Initialize the agent prompt
 agent_prompt = PromptTemplate.from_template(AGENT_PROMPT_TEMPLATE)
 
+# Create the agent using the ReAct framework
 agent = create_react_agent(llm, tools, agent_prompt)
 
+
+# Initialize the agent executor
 agent_executor = AgentExecutor(
     agent=agent,
     tools=tools,
@@ -113,7 +115,14 @@ agent_executor = AgentExecutor(
     return_intermediate_steps=True
 )
 
-# --- 3. Flask API Endpoint ---
+
+# Flask API for a basketball chatbot using LangChain, Neo4j, and Gemini AI.
+# POST /api/generate-query: Accepts {"question": "..."} and returns agent's answer and reasoning steps.
+# Features:
+# - Queries Neo4j basketball database (players, teams, coaches)
+# - Uses LangChain agent (ReAct) for step-by-step reasoning
+# - Supports database queries and calculator tool
+# Env vars: NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD 
 
 @app.route('/api/generate-query', methods=['POST'])
 def generate_query():
@@ -125,7 +134,7 @@ def generate_query():
         # Get the full response from the agent
         response = agent_executor.invoke({"input": question})
 
-        # --- NEW: Manually format the intermediate steps ---
+        # Format the intermediate steps
         serializable_steps = []
         if "intermediate_steps" in response:
             for action, observation in response["intermediate_steps"]:
@@ -153,3 +162,5 @@ def generate_query():
         print(f"Error during agent executor invocation: {e}")
         return jsonify({"error": "Failed to process request. See server logs."}), 500
     
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)
