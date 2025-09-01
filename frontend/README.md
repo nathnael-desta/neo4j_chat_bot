@@ -1,53 +1,55 @@
-# Chatbot UI
+# Neo4j Agentic Chatbot UI
 
-A lightweight and modern chat interface for LLM interactions with Markdown support!
+This project is the frontend user interface for the **Neo4j Agentic Chatbot API**. It provides a clean, modern, and responsive chat interface for interacting with the AI agent.
 
-👉 Looking for a version with web search integration?   
-Check out the [`websearch_template`](https://github.com/ChristophHandschuh/chatbot-ui/tree/websearch_template) branch, which includes contributions from [CameliaK](https://github.com/CameliaK)
+This application was originally cloned from the excellent [ChristophHandschuh/chatbot-ui](https://github.com/ChristophHandschuh/chatbot-ui) repository and has been specifically adapted to connect with the custom agentic backend, display its multi-step reasoning, and handle its rich data responses.
 
-## Overview
+---
+## Screenshots
 
-A minimalist chat interface built with React and TypeScript, designed to be easily integrated with any LLM backend. Features a clean and modern design.
+**Welcome Screen:**
+*(Add a screenshot of your chatbot's welcome message here)*
+`![Welcome Screen](path/to/your/welcome_image.png)`
 
-![Demo](demo/image.png)
+**Answering a Simple Question:**
+*(Add a screenshot of the bot answering a simple, factual question)*
+`![Simple Question](path/to/your/simple_question_image.png)`
 
+**Answering a Complex Question with Agentic Steps:**
+*(Add a screenshot showing the dropdown/details view of the agent's multi-step reasoning)*
+`![Complex Question with Steps](path/to/your/agent_steps_image.png)`
+
+---
 ## Getting Started
 
-1. Clone the repository
-```bash
-git clone https://github.com/ChristophHandschuh/chatbot-ui.git
-cd chatbot-ui
-```
+1.  **Clone the repository**
+    ```bash
+    git clone <your-frontend-repo-url>
+    cd <your-frontend-repo-name>
+    ```
 
-2. Install dependencies
-```bash
-npm i
-```
+2.  **Install dependencies**
+    ```bash
+    npm install
+    ```
 
-3. Start the development server
-```bash
-npm run dev
-```
+3.  **Start the development server**
+    ```bash
+    npm start
+    ```
 
-## Test Mode
+## Connecting to the Backend
 
-The project includes a test backend for development and testing purposes. To use the test mode:
+For the chat to function, it must be connected to the [Neo4j Agentic Chatbot API](<your-backend-repo-url>).
 
-1. Navigate to the testbackend directory
-2. Create a Python virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows use: venv\Scripts\activate
-```
-3. Install the required package:
-```bash
-pip install websockets
-```
-4. Run the test backend:
-```bash
-python test.py
-```
+1.  Ensure the backend server is running, typically on `http://localhost:5000`.
+2.  In the root of this frontend project, create a file named `.env.local`.
+3.  Add the following line to the `.env.local` file to point the frontend to your local backend server:
+    ```
+    VITE_API_BASE_URL=http://localhost:5000
+    ```
 
+---
 ## Credits
 
 This project was built by:
@@ -58,6 +60,8 @@ Additional contribution by:
 - [CameliaK](https://github.com/CameliaK) – Implemented web search and integrated it into the LLM prompt
 
 Some code components were inspired by and adapted from [Vercel's AI Chatbot](https://github.com/vercel/ai-chatbot).
+
+This version was adapted for the Neo4j Agentic Chatbot by **[Your Name/Project Name Here]**.
 
 ## License
 
