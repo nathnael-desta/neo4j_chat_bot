@@ -13,65 +13,10 @@ interface ChatInputProps {
     isLoading: boolean;
 }
 
-const suggestedActions = [
-    {
-        title: 'How old is LeBron James?',
-        action: 'How old is LeBron James?',
-    },
-    {
-        title: 'Which players played against the Milwaukee Bucks?',
-        action: 'Which players played against the Milwaukee Bucks?',
-    },
-    {
-        title: 'Is James Harden a teammate of Kevin Durant?',
-        action: 'Is James Harden a teammate of Kevin Durant?',
-    },
-    {
-        title: 'Who are the teammates of the players coached by Doc Rivers?',
-        action: 'Who are the teammates of the players coached by Doc Rivers?',
-    },
-    {
-        title: 'what is the age difference between Luka Doncic and LeBron James?',
-        action: 'what is the age difference between Luka Doncic and LeBron James?',
-    },
-    {
-        title: 'who is the highest paid person from lakers?',
-        action: 'who is the highest paid person from lakers?',
-    },
-];
-
 export const ChatInput = ({ question, setQuestion, onSubmit, isLoading }: ChatInputProps) => {
-    const [showSuggestions, setShowSuggestions] = useState(true);
 
     return (
         <div className="relative w-full flex flex-col gap-4">
-            {showSuggestions && (
-                <div className="hidden md:grid sm:grid-cols-2 gap-2 w-full">
-                    {suggestedActions.map((suggestedAction, index) => (
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 20 }}
-                            transition={{ delay: 0.05 * index }}
-                            key={index}
-                            className={index > 1 ? 'hidden sm:block' : 'block'}
-                        >
-                            <Button
-                                variant="ghost"
-                                onClick={() => {
-                                    const text = suggestedAction.action;
-                                    onSubmit(text);
-                                    setShowSuggestions(false);
-                                }}
-                                className="text-left border rounded-xl px-4 py-3.5 text-sm flex-1 w-full h-full min-h-[64px] justify-start items-start overflow-hidden"
-                                style={{ whiteSpace: 'normal', wordBreak: 'break-word', height: '100%' }}
-                            >
-                                <span className="font-medium text-wrap w-full break-words">{suggestedAction.title}</span>
-                            </Button>
-                        </motion.div>
-                    ))}
-                </div>
-            )}
             <input
                 type="file"
                 className="fixed -top-4 -left-4 size-0.5 opacity-0 pointer-events-none"
@@ -93,7 +38,6 @@ export const ChatInput = ({ question, setQuestion, onSubmit, isLoading }: ChatIn
                         if (isLoading) {
                             toast.error('Please wait for the model to finish its response!');
                         } else {
-                            setShowSuggestions(false);
                             onSubmit();
                         }
                     }

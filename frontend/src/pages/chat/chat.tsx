@@ -3,34 +3,29 @@ import { PreviewMessage, ThinkingMessage } from "../../components/custom/message
 import { useScrollToBottom } from '@/components/custom/use-scroll-to-bottom';
 import { useState, useRef } from "react";
 import { message } from "../../interfaces/interfaces"
-import { Overview } from "@/components/custom/overview";
 import { Header } from "@/components/custom/header";
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
-
-const socket = new WebSocket("ws://localhost:8090"); //change to your websocket endpoint
+import { Sidebar } from "@/components/custom/sidebar";
 
 export function Chat() {
   const [messagesContainerRef, messagesEndRef] = useScrollToBottom<HTMLDivElement>();
   const [messages, setMessages] = useState<message[]>([]);
   const [question, setQuestion] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const messageHandlerRef = useRef<((event: MessageEvent) => void) | null>(null);
-
-  const cleanupMessageHandler = () => {
-    if (messageHandlerRef.current && socket) {
-      socket.removeEventListener("message", messageHandlerRef.current);
-      messageHandlerRef.current = null;
-    }
-  };
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   async function handleSubmit(text?: string) {
     // Prevent sending if a request is already in progress
     if (isLoading) return;
 
     const messageText = text || question;
+    if (!messageText) return;
+
     setIsLoading(true);
+    if (isSidebarOpen && window.innerWidth < 768) {
+      setIsSidebarOpen(false);
+    }
 
     // A unique ID for the user message and the corresponding bot message
     const traceId = uuidv4();
@@ -52,9 +47,9 @@ export function Chat() {
       console.log({ response })
 
       // Add the complete bot response to the UI
-      const newMessage: message = { 
-        content: botAnswer, 
-        role: "assistant", 
+      const newMessage: message = {
+        content: botAnswer,
+        role: "assistant",
         id: traceId,
         intermediate_steps: intermediateSteps
       };
@@ -77,23 +72,45 @@ export function Chat() {
   }
 
   return (
-    <div className="flex flex-col min-w-0 h-dvh bg-background">
-      <Header />
-      <div className="flex flex-col min-w-0 gap-6 flex-1 overflow-y-scroll pt-4" ref={messagesContainerRef}>
-        {messages.length == 0 && <Overview />}
-        {messages.map((message, index) => (
-          <PreviewMessage key={index} message={message} />
-        ))}
-        {isLoading && <ThinkingMessage />}
-        <div ref={messagesEndRef} className="shrink-0 min-w-[24px] min-h-[24px]" />
-      </div>
-      <div className="flex mx-auto px-4 bg-background pb-4 md:pb-6 gap-2 w-full md:max-w-3xl">
-        <ChatInput
-          question={question}
-          setQuestion={setQuestion}
-          onSubmit={handleSubmit}
-          isLoading={isLoading}
-        />
+    <div className="flex h-dvh bg-background">
+      <Sidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+        onQuestionClick={handleSubmit}
+      />
+      <div className="flex flex-col flex-1 min-w-0">
+        <Header onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+        <div className="flex flex-col min-w-0 gap-6 flex-1 overflow-y-scroll pt-4" ref={messagesContainerRef}>
+          {messages.length === 0 && (
+            <div className="flex h-full items-center justify-center">
+              <div className="max-w-xl text-center bg-card rounded-xl shadow-lg p-8 border border-border">
+              <h1 className="text-2xl font-bold mb-4 flex items-center justify-center gap-2">
+                Welcome to the NBA Knowledge Graph Chatbot! 
+                <span role="img" aria-label="basketball">🏀</span>
+              </h1>
+              <p className=" mb-4">
+                This chat is powered by a database featuring NBA stars like <strong>LeBron James</strong>, <strong>Kevin Durant</strong>, <strong>Luka Doncic</strong>, and <strong>Giannis Antetokounmpo</strong>, and teams like the <strong>LA Lakers</strong>, <strong>Brooklyn Nets</strong>, and <strong>Dallas Mavericks</strong>.
+              </p>
+              <p>
+                You can ask about player stats, team rosters, coaching staff, and game performances.
+              </p>
+              </div>
+            </div>
+          )}
+          {messages.map((message, index) => (
+            <PreviewMessage key={index} message={message} />
+          ))}
+          {isLoading && <ThinkingMessage />}
+          <div ref={messagesEndRef} className="shrink-0 min-w-[24px] min-h-[24px]" />
+        </div>
+        <div className="flex mx-auto px-4 bg-background pb-4 md:pb-6 gap-2 w-full md:max-w-3xl">
+          <ChatInput
+            question={question}
+            setQuestion={setQuestion}
+            onSubmit={handleSubmit}
+            isLoading={isLoading}
+          />
+        </div>
       </div>
     </div>
   );
