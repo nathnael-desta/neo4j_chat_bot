@@ -1,19 +1,19 @@
 import { ChatInput } from "@/components/custom/chatinput";
-import { Header } from "@/components/custom/header";
-import { Sidebar } from "@/components/custom/sidebar";
-import { useScrollToBottom } from '@/components/custom/use-scroll-to-bottom';
-import axios from 'axios';
-import { useState } from "react";
-import { v4 as uuidv4 } from 'uuid';
 import { PreviewMessage, ThinkingMessage } from "../../components/custom/message";
-import { message } from "../../interfaces/interfaces";
+import { useScrollToBottom } from '@/components/custom/use-scroll-to-bottom';
+import { useState, useRef } from "react";
+import { message } from "../../interfaces/interfaces"
+import { Header } from "@/components/custom/header";
+import { v4 as uuidv4 } from 'uuid';
+import axios from 'axios';
+import { Sidebar } from "@/components/custom/sidebar";
 
 export function Chat() {
   const [messagesContainerRef, messagesEndRef] = useScrollToBottom<HTMLDivElement>();
   const [messages, setMessages] = useState<message[]>([]);
   const [question, setQuestion] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 768);
 
   async function handleSubmit(text?: string) {
     // Prevent sending if a request is already in progress
@@ -23,6 +23,7 @@ export function Chat() {
     if (!messageText) return;
 
     setIsLoading(true);
+    // Close sidebar on mobile when a question is submitted
     if (isSidebarOpen && window.innerWidth < 768) {
       setIsSidebarOpen(false);
     }
@@ -88,18 +89,21 @@ export function Chat() {
       <div className="flex flex-col flex-1 min-w-0">
         <Header onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
         <div className="flex flex-col min-w-0 gap-6 flex-1 overflow-y-scroll pt-4" ref={messagesContainerRef}>
-          {messages.length === 0 && (
+            {messages.length === 0 && (
             <div className="flex h-full items-center justify-center">
               <div className="max-w-xl text-center bg-card rounded-xl shadow-lg p-8 border border-border">
               <h1 className="text-2xl font-bold mb-4 flex items-center justify-center gap-2">
                 Welcome to the NBA Knowledge Graph Chatbot! 
                 <span role="img" aria-label="basketball">🏀</span>
               </h1>
-              <p className=" mb-4">
+              <p className="mb-4">
                 This chat is powered by a Neo4j database featuring NBA stars like <strong>LeBron James</strong>, <strong>Kevin Durant</strong>, <strong>Luka Doncic</strong>, and <strong>Giannis Antetokounmpo</strong>, and teams like the <strong>LA Lakers</strong>, <strong>Brooklyn Nets</strong>, and <strong>Dallas Mavericks</strong>.
               </p>
               <p>
                 You can ask about player stats, team rosters, coaching staff, and game performances.
+              </p>
+              <p className="mt-6 text-muted-foreground">
+                Select a suggestion from the sidebar or type a new question.
               </p>
               </div>
             </div>
