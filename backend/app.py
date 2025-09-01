@@ -153,5 +153,3 @@ def generate_query():
         print(f"Error during agent executor invocation: {e}")
         return jsonify({"error": "Failed to process request. See server logs."}), 500
     
-if __name__ == '__main__':
-    app.run(debug=True, port=5000)
