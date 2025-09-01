@@ -9,7 +9,7 @@ const templateQuestions = [
   "Is James Harden a teammate of Kevin Durant?",
   "Who are the teammates of the players coached by Doc Rivers?",
   "what is the age difference between Luka Doncic and LeBron James?",
-  "who is the highest paid person from lakers?",
+  "How many points did Ja Morant score against the Lakers?",
 ];
 
 interface OverviewProps {
