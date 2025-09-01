@@ -4,7 +4,7 @@ import { BotIcon, MessageCircle } from 'lucide-react';
 import { SiNeo4J } from "react-icons/si";
 
 const templateQuestions = [
-  "How old is LeBron James?",
+  "Who is the coach of the LA Lakers?",
   "List all players on the Brooklyn Nets.",
   "Is James Harden a teammate of Kevin Durant?",
   "Who are the teammates of the players coached by Doc Rivers?",
