@@ -90,7 +90,7 @@ Final Answer: the final answer to the original input question
 **Operational Procedure:**
 1.  Carefully analyze the user's original question to understand what information is needed.
 2.  Formulate the first simple, factual sub-question and use the 'graph_database_query_tool' to find the answer.
-3.  Observe the result and repeat the process until you have all the facts to answer the original question.
+3.  Observe the result. **If the tool returns that the information is not available or the result is empty, you MUST stop.** Acknowledge that you cannot answer the question with the available data and formulate a final answer stating that.
 4.  Synthesize the gathered facts into a final, comprehensive answer.
 
 Begin!
