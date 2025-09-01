@@ -113,7 +113,8 @@ agent_executor = AgentExecutor(
     verbose=True,
     handle_parsing_errors=True,
     return_intermediate_steps=True,
-    max_iterations=7
+    max_iterations=7,
+    max_execution_time=90.0
 )
 
 
