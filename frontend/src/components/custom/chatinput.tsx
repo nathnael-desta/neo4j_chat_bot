@@ -3,6 +3,7 @@ import { toast } from 'sonner';
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import { ArrowUpIcon } from "./icons";
+import { useEffect, useState } from 'react';
 
 interface ChatInputProps {
     question: string;
@@ -12,6 +13,16 @@ interface ChatInputProps {
 }
 
 export const ChatInput = ({ question, setQuestion, onSubmit, isLoading }: ChatInputProps) => {
+    const [isDesktop, setIsDesktop] = useState(false);
+
+    useEffect(() => {
+        const checkScreenSize = () => {
+            setIsDesktop(window.innerWidth >= 768);
+        };
+        checkScreenSize();
+        window.addEventListener('resize', checkScreenSize);
+        return () => window.removeEventListener('resize', checkScreenSize);
+    }, []);
 
     return (
         <div className="relative w-full flex flex-col gap-4">
@@ -41,7 +52,7 @@ export const ChatInput = ({ question, setQuestion, onSubmit, isLoading }: ChatIn
                     }
                 }}
                 rows={3}
-                autoFocus
+                autoFocus={isDesktop}
             />
 
             <Button
