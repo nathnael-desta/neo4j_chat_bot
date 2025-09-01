@@ -36,7 +36,7 @@ export function Chat() {
 
     try {
       // Build the API URL dynamically based on the environment
-      const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/generate-query`;
+      const apiUrl = `${process.env.VITE_API_BASE_URL}/api/generate-query`;
 
       // Make the API call to your Flask backend
       const response = await axios.post(
