@@ -45,9 +45,13 @@ export function Chat() {
       );
 
       // Extract the final answer from the backend's JSON response
-      const botAnswer = response.data.output;
+      let botAnswer = response.data.output;
       const intermediateSteps = response.data.intermediate_steps;
-      console.log({ response })
+
+      // Check if the response contains the specific error message
+      if (botAnswer === "Agent stopped due to iteration limit or time limit.") {
+        botAnswer = "I'm sorry, I couldn't find that information in my database.";
+      }
 
       // Add the complete bot response to the UI
       const newMessage: message = {
