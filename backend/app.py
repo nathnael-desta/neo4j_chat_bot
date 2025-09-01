@@ -19,7 +19,7 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0)
+llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash-lite", temperature=0)
 
 try:
     graph = Neo4jGraph(

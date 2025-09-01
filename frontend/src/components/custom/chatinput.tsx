@@ -19,8 +19,8 @@ const suggestedActions = [
         action: 'How old is LeBron James?',
     },
     {
-        title: 'List all players on the Brooklyn Nets.',
-        action: 'List all players on the Brooklyn Nets.',
+        title: 'Which players played against the Milwaukee Bucks?',
+        action: 'Which players played against the Milwaukee Bucks?',
     },
     {
         title: 'Is James Harden a teammate of Kevin Durant?',
