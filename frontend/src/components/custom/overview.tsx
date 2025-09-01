@@ -1,7 +1,6 @@
-import { motion } from 'framer-motion';
-import { MessageCircle, BotIcon } from 'lucide-react';
 import { Card } from "@/components/ui/card";
-import { Icons } from "../ui/icons";
+import { motion } from 'framer-motion';
+import { BotIcon, MessageCircle } from 'lucide-react';
 import { SiNeo4J } from "react-icons/si";
 
 const templateQuestions = [

@@ -1,12 +1,12 @@
 import { ChatInput } from "@/components/custom/chatinput";
-import { PreviewMessage, ThinkingMessage } from "../../components/custom/message";
-import { useScrollToBottom } from '@/components/custom/use-scroll-to-bottom';
-import { useState, useRef } from "react";
-import { message } from "../../interfaces/interfaces"
 import { Header } from "@/components/custom/header";
-import { v4 as uuidv4 } from 'uuid';
-import axios from 'axios';
 import { Sidebar } from "@/components/custom/sidebar";
+import { useScrollToBottom } from '@/components/custom/use-scroll-to-bottom';
+import axios from 'axios';
+import { useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
+import { PreviewMessage, ThinkingMessage } from "../../components/custom/message";
+import { message } from "../../interfaces/interfaces";
 
 export function Chat() {
   const [messagesContainerRef, messagesEndRef] = useScrollToBottom<HTMLDivElement>();

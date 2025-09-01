@@ -1,12 +1,9 @@
 import { message } from "@/interfaces/interfaces";
-import { Bot, SparklesIcon, User } from "lucide-react";
-import { Markdown } from "./markdown";
-import { Button } from "../ui/button";
+import { Bot, ChevronDown, ChevronUp, User } from "lucide-react";
 import { useState } from "react";
+import { Button } from "../ui/button";
 import { IntermediateSteps } from "./IntermediateSteps";
-import { ChevronDown, ChevronUp } from 'lucide-react';
-import { motion } from "framer-motion";
-import { cx } from "class-variance-authority";
+import { Markdown } from "./markdown";
 
 
 export function PreviewMessage({ message }: { message: message }) {
