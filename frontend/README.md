@@ -8,17 +8,15 @@ This application was originally cloned from the excellent [ChristophHandschuh/ch
 ## Screenshots
 
 **Welcome Screen:**
-*(Add a screenshot of your chatbot's welcome message here)*
-`![Welcome Screen](path/to/your/welcome_image.png)`
+![Welcome Screen](https://github.com/nathnael-desta/neo4j_chat_bot/blob/main/frontend/Screenshot%20from%202025-09-01%2013-25-37.png)
 
 **Answering a Simple Question:**
-*(Add a screenshot of the bot answering a simple, factual question)*
-`![Simple Question](path/to/your/simple_question_image.png)`
+![simple question](https://github.com/nathnael-desta/neo4j_chat_bot/blob/main/frontend/Screenshot%20from%202025-09-01%2013-26-06.png)
 
 **Answering a Complex Question with Agentic Steps:**
-*(Add a screenshot showing the dropdown/details view of the agent's multi-step reasoning)*
-`![Complex Question with Steps](path/to/your/agent_steps_image.png)`
+![complex question 1](https://github.com/nathnael-desta/neo4j_chat_bot/blob/main/frontend/Screenshot%20from%202025-09-01%2013-27-44.png)
 
+![complex question 2](https://github.com/nathnael-desta/neo4j_chat_bot/blob/main/frontend/Screenshot%20from%202025-09-01%2013-27-49.png)
 ---
 ## Getting Started
 
