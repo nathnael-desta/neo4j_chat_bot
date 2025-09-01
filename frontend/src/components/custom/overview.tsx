@@ -1,5 +1,8 @@
 import { motion } from 'framer-motion';
 import { MessageCircle, BotIcon } from 'lucide-react';
+import { Card } from "@/components/ui/card";
+import { Icons } from "../ui/icons";
+import { SiNeo4J } from "react-icons/si";
 
 export const Overview = () => {
   return (
@@ -25,6 +28,14 @@ export const Overview = () => {
         </p>
       </div>
     </motion.div>
+    <div className="flex flex-col gap-4 md:max-w-3xl md:mx-auto md:w-full">
+      <div className="text-2xl font-bold flex items-center gap-2">
+        {/* <Icons.neo4j className="w-8 h-8" /> */}
+        <SiNeo4J className="w-8 h-8"/>
+        <span>Chat with your Graph</span>
+      </div>
+
+    </div>
     </>
   );
 };
